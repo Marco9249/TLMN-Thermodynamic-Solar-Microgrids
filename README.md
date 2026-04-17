@@ -1,118 +1,160 @@
 <div align="center">
 
-# 🌡️ Thermodynamic Liquid Manifold Networks (TLMN)
-### *Physics-Bounded Deep Learning for Solar Forecasting in Autonomous Off-Grid Microgrids*
+<img src="https://img.shields.io/badge/%F0%9F%8C%A1%EF%B8%8F-Thermodynamic%20AI-FF6B6B?style=for-the-badge&labelColor=1a1a2e" alt="Thermodynamic AI"/>
 
-[![arXiv](https://img.shields.io/badge/arXiv-2604.11909-b31b1b?style=for-the-badge&logo=arxiv)](https://arxiv.org/abs/2604.11909)
+# Thermodynamic Liquid Manifold Networks (TLMN)
+
+### 🌍 *Physics-Bounded Deep Learning for Autonomous Off-Grid Microgrids* 🌍
+
+<br/>
+
+[![arXiv](https://img.shields.io/badge/arXiv-2604.11909-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2604.11909)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![Author](https://img.shields.io/badge/Author-Mohammed%20E.%20B.%20Abdullah-blue?style=for-the-badge)](https://github.com/Marco9249)
-[![PyTorch](https://img.shields.io/badge/Framework-PyTorch-EE4C2C?style=for-the-badge&logo=pytorch)](https://pytorch.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![NASA POWER](https://img.shields.io/badge/Data-NASA%20POWER-005288?style=for-the-badge&logo=nasa&logoColor=white)](https://power.larc.nasa.gov/)
+
+<br/>
+
+<img src="https://img.shields.io/badge/Author-Mohammed%20Ezzeldin%20Babiker%20Abdullah-4A90D9?style=flat-square&logo=google-scholar&logoColor=white" alt="Author"/>
+
+---
+
+*"Zero-magnitude nocturnal error across all 1,826 testing days."*
 
 </div>
 
 ---
 
-## 📄 Abstract
+## 🎯 The Problem We Solved
 
-Contemporary deep learning solar forecasting models consistently exhibit two critical failure modes:
-1. ☁️ **Severe temporal phase lags** during cloud transients
-2. 🌙 **Physically impossible nocturnal power generation**
+> Contemporary solar forecasting models fail in two catastrophic ways:
 
-**TLMN v3** resolves both by projecting **22 meteorological and geometric variables** into a Koopman-linearized Riemannian manifold, combined with a multiplicative **Thermodynamic Alpha-Gate** that structurally enforces celestial geometry compliance.
+| Failure Mode | Impact | TLMN Solution |
+|:------------:|:------:|:--------------:|
+| ☁️ **Temporal Phase Lag** | Delayed cloud response | Dilated 1D-CNN (zero lag) |
+| 🌙 **Phantom Nocturnal Generation** | Impossible predictions | Thermodynamic Alpha-Gate |
 
-### Validated Results (5-Year Horizon, Semi-Arid Climate):
+### 🏆 Results (5-Year Horizon, Semi-Arid Climate)
+
+<div align="center">
 
 | Metric | Value |
-|--------|-------|
-| **RMSE** | **18.31 Wh/m²** |
-| **Pearson Correlation** | **0.988** |
-| **Nocturnal Error** | **Zero — across all 1,826 test days** |
-| **Phase Response** | **< 30-minute lag during rapid transients** |
-| **Parameters** | **63,458 (ultra-lightweight)** |
+|:------:|:-----:|
+| 📉 **RMSE** | **18.31 Wh/m²** |
+| 📊 **Pearson Correlation** | **0.988** |
+| 🌙 **Nocturnal Error** | **Zero** (all 1,826 days) |
+| ⚡ **Phase Response** | **< 30 min** during rapid transients |
+| 🧮 **Parameters** | **63,458** (ultra-lightweight) |
+
+</div>
 
 ---
 
-## 🏗️ Model Architecture (v3)
+## 🏗️ Architecture (v3)
 
 ```
-NASA POWER Input (22 Features, Window=24h)
-            │
-   ┌────────▼─────────┐
-   │ Hankel Embedding  │  ← Koopman state-space linearization
-   │  + Projection     │    (24→20 dynamic windows)
-   └────────┬──────────┘
-            │
-   ┌────────▼──────────────────┐
-   │  1D-CNN Temporal Encoder   │  ← 3-layer dilated conv (dilation: 1,2,4)
-   │  (replaces LiquidNeuralODE)│    No temporal smoothing lag
-   └────────┬──────────────────┘
-            │
-   ┌────────▼──────────────────────────────┐
-   │  Symplectic Cross-Attention            │  ← Physics-guided: Q=meteo, K/V=ClearSky+SZA
-   │  After CNN Encoder                     │  ← Attention positioned AFTER temporal encoder
-   └────────┬──────────────────────────────┘
-            │
-   ┌────────▼──────────────────────────────────────┐
-   │  Thermodynamic Alpha-Gate (Physics Output)     │
-   │  pred = σ(KAN(h_last)) × ClearSky_norm        │  ← Structural zero guarantee at night
-   └────────┬──────────────────────────────────────┘
-            │
-   [GHI Prediction — Wh/m², physically bounded]
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│   ☀️  NASA POWER Input (22 Variables, 24h Window)   │
+│       Meteorological + Geometric + Derived          │
+│                        │                            │
+│              ┌─────────▼──────────┐                 │
+│              │  Hankel Embedding  │  Koopman         │
+│              │  + Tanh Projection │  linearization   │
+│              │  + Positional Enc. │                  │
+│              └─────────┬──────────┘                 │
+│                        │                            │
+│       ┌────────────────▼────────────────┐           │
+│       │  🔥 Dilated 1D-CNN Encoder      │           │
+│       │  3 layers × dilation [1,2,4]    │  Zero-lag │
+│       │  Receptive field = 13 steps     │  temporal │
+│       │  (replaces LiquidNeuralODE)     │  encoding │
+│       └────────────────┬────────────────┘           │
+│                        │                            │
+│       ┌────────────────▼────────────────┐           │
+│       │  🎯 Symplectic Cross-Attention  │  Physics  │
+│       │  Q = meteorological features    │  guided   │
+│       │  K/V = ClearSky + SZA           │  (after   │
+│       │  γ-weighted residual            │  encoder) │
+│       └────────────────┬────────────────┘           │
+│                        │                            │
+│    ┌───────────────────▼───────────────────┐        │
+│    │  🌡️ Thermodynamic Alpha-Gate          │        │
+│    │  pred = σ(KAN(h)) × ClearSky_norm    │  Night  │
+│    │  Structural zero guarantee           │  = 0    │
+│    └───────────────────┬───────────────────┘        │
+│                        │                            │
+│             📊 GHI Prediction (Wh/m²)               │
+│             Physically bounded, always              │
+│                                                     │
+└─────────────────────────────────────────────────────┘
 ```
 
-### 🔬 Architecture Innovation vs. v2
+### 🔬 v2 → v3 Evolution
 
-| Component | v2 (LiquidNeuralODE) | v3 (TLMN) |
-|-----------|---------------------|------------|
-| Temporal model | ODE solver (slow) | Dilated 1D-CNN (fast, no lag) |
-| Loss function | MSE + penalties | Log-Cosh (peak-aggressive) |
-| Physics enforcement | Penalty terms | Structural gate (zero error, always) |
-| **Data window** | **Fixed** | **Sliding window, 3-step stride** |
-| **Data source** | **NASA POWER** | **NASA POWER (22 variables)** |
+| Component | v2 | v3 (Current) |
+|:---------:|:--:|:------------:|
+| Temporal Encoder | LiquidNeuralODE (slow) | Dilated 1D-CNN (fast, no lag) |
+| Loss Function | MSE + penalty terms | Log-Cosh (peak-aggressive) |
+| Physics Enforcement | Loss penalties | Structural gate (100% guarantee) |
+| Sliding Window | Fixed | **3-step stride** |
+| Input Features | 15 | **22 variables** |
 
 ---
 
-## 📂 Project Structure
+## 📂 Repository Structure
 
 ```
-📁 TLMN-Thermodynamic-Solar-Microgrids/
-├── 📁 كود التدريب/         # Training pipeline
-│   └── TLMN_Model.py       # Full TLMN v3 architecture
-├── 📁 كود اختبارات/        # Test evaluation scripts
-│   └── TLMN_Test.py
-├── 📁 بيانات التدريب/       # NASA POWER datasets
-│   └── Hourly_2010_2015.csv
-├── requirements.txt
-└── README.md
+📦 TLMN-Thermodynamic-Solar-Microgrids/
+│
+├── 📁 training_code/
+│   └── 🧠 TLMN_Model.py                 # Full TLMN v3 architecture
+│
+├── 📁 evaluation_code/
+│   └── 📊 TLMN_Test.py                   # Test evaluation pipeline
+│
+├── 📁 training_data/
+│   ├── 📊 Hourly_2010_2015.csv           # NASA POWER hourly data
+│   └── 📊 Hourly_2020_2025.csv
+│
+├── 📄 TLMN_Paper.pdf                     # Published paper
+├── 📄 TLMN_Paper.docx
+├── 📋 requirements.txt
+└── 📖 README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ```bash
-# Clone & install
+# Clone & setup
 git clone https://github.com/Marco9249/TLMN-Thermodynamic-Solar-Microgrids.git
 cd TLMN-Thermodynamic-Solar-Microgrids
 pip install -r requirements.txt
 
-# Run training (ensure NASA POWER CSV is in directory)
-python "كود التدريب/TLMN_Model.py"
+# Train TLMN v3
+python training_code/TLMN_Model.py
 
-# Run evaluation
-python "كود اختبارات/TLMN_Test.py"
+# Evaluate
+python evaluation_code/TLMN_Test.py
 ```
 
 ---
 
-## 🔗 Related Research by the Same Author
+## 📚 Related Research Papers
+
+<div align="center">
 
 | # | Paper | Repository | arXiv |
-|---|-------|------------|-------|
-| 1 | Physics-Guided CNN-BiLSTM Solar Forecast | [Physics-Guided-CNN-BiLSTM-Solar](https://github.com/Marco9249/Physics-Guided-CNN-BiLSTM-Solar) | [2604.13455](https://arxiv.org/abs/2604.13455) |
-| 2 | Physics-Informed State Space Models (PISSM) | [PISSM-Solar-Forecasting](https://github.com/Marco9249/PISSM-Solar-Forecasting) | [2604.11807](https://arxiv.org/abs/2604.11807) |
-| 3 | **Thermodynamic Liquid Manifold Networks (TLMN)** *(this repo)* | [Here](https://github.com/Marco9249/TLMN-Thermodynamic-Solar-Microgrids) | [2604.11909](https://arxiv.org/abs/2604.11909) |
-| 4 | Asymmetric-Loss RUL Prediction (Industrial AI) | [Industrial-RUL-Prediction-Architecture](https://github.com/Marco9249/Industrial-RUL-Prediction-Architecture) | [2604.13459](https://arxiv.org/abs/2604.13459) |
+|:-:|:------|:----------:|:-----:|
+| 1 | Physics-Guided CNN-BiLSTM Solar Forecast | [![Repo](https://img.shields.io/badge/-Repo-181717?style=flat-square&logo=github)](https://github.com/Marco9249/Physics-Guided-CNN-BiLSTM-Solar) | [![arXiv](https://img.shields.io/badge/-2604.13455-b31b1b?style=flat-square&logo=arxiv)](https://arxiv.org/abs/2604.13455) |
+| 2 | Physics-Informed State Space Model (PISSM) | [![Repo](https://img.shields.io/badge/-Repo-181717?style=flat-square&logo=github)](https://github.com/Marco9249/PISSM-Solar-Forecasting) | [![arXiv](https://img.shields.io/badge/-2604.11807-b31b1b?style=flat-square&logo=arxiv)](https://arxiv.org/abs/2604.11807) |
+| **3** | **TLMN** *(this repo)* 🌟 | [![Repo](https://img.shields.io/badge/-Repo-181717?style=flat-square&logo=github)](https://github.com/Marco9249/TLMN-Thermodynamic-Solar-Microgrids) | [![arXiv](https://img.shields.io/badge/-2604.11909-b31b1b?style=flat-square&logo=arxiv)](https://arxiv.org/abs/2604.11909) |
+| 4 | Asymmetric-Loss Industrial RUL Prediction | [![Repo](https://img.shields.io/badge/-Repo-181717?style=flat-square&logo=github)](https://github.com/Marco9249/Industrial-RUL-Prediction-Architecture) | [![arXiv](https://img.shields.io/badge/-2604.13459-b31b1b?style=flat-square&logo=arxiv)](https://arxiv.org/abs/2604.13459) |
+| 🎮 | Interactive 3D Architecture Visualization | [![Repo](https://img.shields.io/badge/-Repo-181717?style=flat-square&logo=github)](https://github.com/Marco9249/PI-Hybrid-3D-Viz) | — |
+
+</div>
 
 ---
 
@@ -132,21 +174,21 @@ python "كود اختبارات/TLMN_Test.py"
 }
 ```
 
-**APA 7th Edition:**
+> **APA 7th Edition:**
 > Abdullah, M. E. B. (2026). *Thermodynamic Liquid Manifold Networks: Physics-Bounded Deep Learning for Solar Forecasting in Autonomous Off-Grid Microgrids*. arXiv. https://arxiv.org/abs/2604.11909
-
----
-
-## 👤 Author
-
-**Mohammed Ezzeldin Babiker Abdullah**
-
-[![GitHub](https://img.shields.io/badge/GitHub-Marco9249-black?style=flat-square&logo=github)](https://github.com/Marco9249)
 
 ---
 
 <div align="center">
 
-© 2026 Mohammed Ezzeldin Babiker Abdullah. All rights reserved.
+### 👤 Author
+
+**Mohammed Ezzeldin Babiker Abdullah**
+
+[![GitHub](https://img.shields.io/badge/GitHub-Marco9249-181717?style=for-the-badge&logo=github)](https://github.com/Marco9249)
+
+---
+
+© 2026 Mohammed Ezzeldin Babiker Abdullah — All rights reserved.
 
 </div>
